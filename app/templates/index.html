@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>YouTube to Text and Summary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1f2937 0%, #4b5563 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            text-align: left;
+            margin-bottom: 6px;
+            font-weight: 600;
+            display: block;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.7em 1em;
+            margin-bottom: 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            outline: none;
+            transition: background 0.2s ease;
+        }
+
+        input[type="text"]::placeholder {
+            color: #e5e7eb;
+        }
+
+        input[type="text"]:focus {
+            background: rgba(255,255,255,0.2);
+        }
+
+        button[type="submit"] {
+            background: #3b82f6;
+            border: none;
+            padding: 0.8em 1em;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        button[type="submit"]:hover {
+            background: #2563eb;
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+            opacity: 0.5;
+            animation: pulse 8s infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.2);
+            }
+        }
+
+        /* LOADER OVERLAY */
+        .loader-overlay {
+            display: none; /* hidden by default */
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader Overlay -->
+    <div class="loader-overlay" id="loaderOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="container">
+        <h1>YouTube to Text <br> & Summary</h1>
+        <form method="POST" onsubmit="showLoader()">
+            <label for="youtube_url">YouTube URL</label>
+            <input type="text" id="youtube_url" name="youtube_url" placeholder="Paste YouTube link here" required>
+
+            <button type="submit">Let’s Go!</button>
+        </form>
+    </div>
+
+    <script>
+        function showLoader() {
+            document.getElementById('loaderOverlay').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
