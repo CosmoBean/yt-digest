@@ -2,7 +2,11 @@ import yt_dlp
 import os
 from pydub import AudioSegment
 
+
 def download_audio(youtube_url, output_path="downloads"):
+    """
+    Downloads audio from a YouTube video and extracts its title and thumbnail.
+    """
     ydl_opts = {
         'format': 'bestaudio/best',
         'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
@@ -21,7 +25,12 @@ def download_audio(youtube_url, output_path="downloads"):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
             info_dict = ydl.extract_info(youtube_url, download=True)
-            # Attempt to retrieve the postprocessed file path
+
+            # Extract details
+            video_title = info_dict.get('title', 'Unknown Title')
+            thumbnail_url = info_dict.get('thumbnail', None)
+
+            # Get the audio file path
             if 'requested_downloads' in info_dict and info_dict['requested_downloads']:
                 audio_file = info_dict['requested_downloads'][0]['filepath']
             else:
@@ -31,20 +40,14 @@ def download_audio(youtube_url, output_path="downloads"):
 
             if not os.path.isfile(audio_file):
                 print(f"Expected audio file not found: {audio_file}")
-                sanitized_title = sanitize_filename(info_dict.get('title', 'audio'))
-                potential_files = [f for f in os.listdir(output_path) if f.startswith(sanitized_title) and f.endswith('.mp3')]
-                if potential_files:
-                    audio_file = os.path.join(output_path, potential_files[0])
-                else:
-                    print("No .mp3 file found after download.")
-                    return None
+                return None, video_title, thumbnail_url
 
             print(f"Audio downloaded to {audio_file}")
-            return audio_file
+            return audio_file, video_title, thumbnail_url
 
         except yt_dlp.utils.DownloadError as e:
             print(f"yt-dlp encountered an error: {e}")
-            return None
+            return None, None, None
 
 def sanitize_filename(name):
     """
